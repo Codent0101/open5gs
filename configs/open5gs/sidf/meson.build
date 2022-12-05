@@ -1,4 +1,4 @@
-# Copyright (C) 2019 by Sukchan Lee <acetcom@gmail.com>
+# Copyright (C) 2022 by Sukchan Lee <acetcom@gmail.com>
 
 # This file is part of Open5GS.
 
@@ -15,37 +15,22 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-open5gs_sysconfdir = join_paths(sysconfdir, 'open5gs')
+sidf_sysconfdir = join_paths(open5gs_sysconfdir, 'sidf')
 meson.add_install_script(python3_exe, '-c',
-        mkdir_p.format(open5gs_sysconfdir))
+        mkdir_p.format(sidf_sysconfdir))
 
-open5gs_conf = '''
-    mme.yaml
-    sgwc.yaml
-    sgwu.yaml
-    smf.yaml
-    amf.yaml
-    upf.yaml
-    hss.yaml
-    pcrf.yaml
-    nrf.yaml
-    scp.yaml
-    ausf.yaml
-    udm.yaml
-    udr.yaml
-    pcf.yaml
-    nssf.yaml
-    bsf.yaml
+sidf_security = '''
+    private-key-1.pem
+    public-key-1.pem
+    private-key-2.pem
+    public-key-2.pem
 '''.split()
 
-foreach file : open5gs_conf
+foreach file : sidf_security
     gen = configure_file(
-            input : file + '.in',
+            input : file,
             output : file,
             configuration : conf_data)
     meson.add_install_script(python3_exe, '-c',
-            install_conf.format(gen, open5gs_sysconfdir))
+            install_conf.format(gen, sidf_sysconfdir))
 endforeach
-
-subdir('tls')
-subdir('sidf')
